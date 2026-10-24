@@ -1,0 +1,164 @@
+/* MONARCH — MOTION STUDY EDITION
+   Interaction principles inspired by modern editorial agency sites.
+   Monarch branding, palette, content and core composition remain original. */
+
+:root{
+  --motion-ease:cubic-bezier(.16,1,.3,1);
+  --motion-fast:cubic-bezier(.22,1,.36,1);
+}
+
+html{scroll-behavior:auto}
+body{overscroll-behavior-y:none}
+
+/* ---------- current-chapter rail ---------- */
+.chapter-indicator{
+  position:fixed;right:24px;top:50%;z-index:68;transform:translateY(-50%);
+  display:flex;align-items:center;gap:12px;color:#eeeae0;mix-blend-mode:difference;
+  pointer-events:none;opacity:0;transition:opacity .45s ease,transform .55s var(--motion-ease)
+}
+.chapter-indicator.visible{opacity:.74;transform:translateY(-50%) translateX(0)}
+.chapter-indicator .chapter-no{font:italic 11px Georgia,serif;min-width:20px;text-align:right}
+.chapter-indicator .chapter-name{font-size:7px;letter-spacing:.24em;text-transform:uppercase;white-space:nowrap;writing-mode:vertical-rl;transform:rotate(180deg)}
+.chapter-indicator .chapter-bar{width:1px;height:56px;background:rgba(255,255,255,.22);position:relative;overflow:hidden}
+.chapter-indicator .chapter-bar i{position:absolute;inset:0;background:#fff;transform-origin:top;transform:scaleY(var(--scene-progress,0));transition:transform .12s linear}
+
+/* ---------- scene transitions ---------- */
+main>section{position:relative}
+.scene-line{position:absolute;z-index:8;left:clamp(22px,5vw,76px);right:clamp(22px,5vw,76px);top:0;height:1px;overflow:hidden;pointer-events:none}
+.scene-line:before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent 0,var(--royal-gold,#d2b47b) 18%,currentColor 58%,transparent 100%);transform:translateX(-110%);opacity:.42}
+.scene-in .scene-line:before{animation:sceneRule 1.45s var(--motion-ease) both}
+@keyframes sceneRule{0%{transform:translateX(-110%)}100%{transform:translateX(110%)}}
+.scene-chapter{
+  position:absolute;top:clamp(24px,3vw,44px);right:clamp(22px,5vw,76px);z-index:7;
+  display:flex;align-items:center;gap:12px;font-size:7px;letter-spacing:.23em;text-transform:uppercase;
+  opacity:0;transform:translateY(14px);transition:opacity .85s ease .12s,transform .9s var(--motion-ease) .12s;
+  pointer-events:none
+}
+.scene-chapter b{font:italic 12px Georgia,serif;font-weight:400;letter-spacing:0}
+.scene-in .scene-chapter{opacity:.48;transform:none}
+
+/* ---------- stronger editorial typography rhythm ---------- */
+.manifesto .big-serif,
+.collection-title-wrap h2,
+.journal-top h2,
+.locations-copy>h2,
+.concierge h2{
+  text-wrap:balance;
+  transform-origin:left center;
+}
+.scene-in .manifesto-copy .big-serif:first-child,
+.scene-in .collection-title-wrap h2,
+.scene-in .journal-top h2,
+.scene-in .locations-copy>h2,
+.scene-in .concierge h2{
+  animation:typeSettle 1.15s var(--motion-ease) both;
+}
+@keyframes typeSettle{
+  0%{letter-spacing:-.075em;transform:translateY(38px) scaleY(.92);filter:blur(7px);opacity:0}
+  100%{letter-spacing:inherit;transform:none;filter:blur(0);opacity:1}
+}
+
+/* ---------- make sections feel like chapters, not stacked blocks ---------- */
+.manifesto{min-height:92vh}
+.manifesto-copy{padding-top:clamp(22px,3vw,42px)}
+.collection{min-height:100vh}
+.journal{overflow:hidden}
+.locations,.concierge{min-height:92vh}
+
+/* ---------- journal becomes the deliberate drag moment ---------- */
+.journal-top{position:relative;z-index:3}
+.journal-drag-head{
+  margin-top:clamp(52px,6vw,86px);display:flex;justify-content:space-between;align-items:end;
+  border-top:1px solid rgba(17,17,15,.15);padding-top:18px;color:#5e594f
+}
+.journal-drag-head p{margin:0;font-size:8px;letter-spacing:.2em;text-transform:uppercase}
+.journal-drag-head .drag-status{display:flex;align-items:center;gap:11px}
+.journal-drag-head .drag-status i{display:block;width:58px;height:1px;background:rgba(17,17,15,.2);position:relative;overflow:hidden}
+.journal-drag-head .drag-status i:after{content:"";position:absolute;inset:0;background:var(--royal-gold);transform:translateX(-75%);animation:dragHint 2.1s var(--motion-ease) infinite}
+@keyframes dragHint{0%{transform:translateX(-100%)}70%,100%{transform:translateX(110%)}}
+
+.journal-grid{
+  display:flex!important;grid-template-columns:none!important;gap:clamp(24px,3.6vw,58px)!important;
+  margin-top:clamp(34px,4vw,56px)!important;
+  width:auto!important;overflow-x:auto;overflow-y:hidden;
+  margin-left:calc(clamp(22px,5vw,76px) * -1)!important;
+  margin-right:calc(clamp(22px,5vw,76px) * -1)!important;
+  padding:0 clamp(22px,5vw,76px) 28px!important;
+  scroll-snap-type:x proximity;scrollbar-width:none;cursor:grab;
+  touch-action:pan-x pan-y;
+  user-select:none;-webkit-user-select:none;
+}
+.journal-grid::-webkit-scrollbar{display:none}
+.journal-grid.is-dragging{cursor:grabbing;scroll-snap-type:none}
+.journal-card,
+.journal-card:nth-child(2),
+.journal-card:nth-child(3){
+  flex:0 0 min(54vw,760px)!important;width:min(54vw,760px)!important;
+  margin:0!important;scroll-snap-align:start;transform:none!important;
+}
+.journal-card:nth-child(2){flex-basis:min(43vw,620px)!important;width:min(43vw,620px)!important;padding-top:clamp(45px,7vw,115px)}
+.journal-card:nth-child(3){flex-basis:min(50vw,700px)!important;width:min(50vw,700px)!important;padding-top:clamp(10px,2vw,28px)}
+.journal-img,
+.journal-card:nth-child(2) .journal-img,
+.journal-card:nth-child(3) .journal-img{height:clamp(430px,58vw,760px)!important}
+.journal-card:nth-child(2) .journal-img{height:clamp(360px,46vw,650px)!important}
+.journal-card:nth-child(3) .journal-img{height:clamp(420px,53vw,720px)!important}
+.journal-card:active{transform:scale(.995)!important}
+
+/* ---------- drag-side edge treatment ---------- */
+.journal:after{content:"";position:absolute;top:0;right:0;bottom:0;width:9vw;z-index:4;pointer-events:none;background:linear-gradient(90deg,transparent,rgba(233,227,214,.9))}
+
+/* ---------- masked media entrances ---------- */
+.scene-mask{position:relative;overflow:hidden}
+.scene-mask:before{
+  content:"";position:absolute;z-index:12;inset:-2px;background:var(--scene-mask-bg,#eeeae0);
+  transform-origin:right center;transform:scaleX(1);transition:transform 1.25s var(--motion-ease) .08s;
+  pointer-events:none
+}
+.scene-in .scene-mask:before{transform:scaleX(0)}
+.collection .scene-mask:before,.locations .scene-mask:before{--scene-mask-bg:#151512}
+.signature.scene-mask:before{--scene-mask-bg:#11110f}
+
+/* ---------- subtle motion-linked depth ---------- */
+[data-depth]{transform:translate3d(0,var(--depth-y,0px),0);will-change:transform}
+.property-card[data-depth]{transition:transform .8s var(--motion-ease),opacity .55s ease!important}
+
+/* ---------- buttons feel less UI, more editorial ---------- */
+.button-primary,.header-cta,.round-link,.text-link{will-change:transform}
+.button-primary{isolation:isolate}
+.button-primary .motion-word{display:inline-block;transition:transform .55s var(--motion-ease)}
+.button-primary:hover .motion-word{transform:translateX(5px)}
+.header-cta{position:relative;overflow:hidden}
+.header-cta:after{content:"";position:absolute;left:26px;right:0;bottom:25px;height:1px;background:linear-gradient(90deg,var(--royal-gold),transparent);transform:scaleX(0);transform-origin:left;transition:transform .6s var(--motion-ease)}
+.header-cta:hover:after{transform:scaleX(1)}
+
+/* ---------- signature gets cinematic chapter transition without overlap ---------- */
+.signature{overflow:hidden}
+.signature .scene-chapter{color:#fff}
+.signature.scene-in .signature-media{filter:saturate(.92) contrast(1.02)}
+
+/* ---------- location card swap becomes a scene cut ---------- */
+.scene-swap{animation:locationCut .72s var(--motion-ease) both}
+@keyframes locationCut{0%{opacity:0;transform:translateY(24px);filter:blur(7px)}100%{opacity:1;transform:none;filter:blur(0)}}
+
+/* ---------- mobile keeps native motion; no forced wheel smoothing ---------- */
+@media(max-width:900px){
+  .chapter-indicator{display:none}
+  .scene-chapter{display:none}
+  .journal:after{display:none}
+  .journal-grid{margin-left:calc(clamp(22px,5vw,76px) * -1)!important;margin-right:calc(clamp(22px,5vw,76px) * -1)!important;padding-bottom:20px!important;gap:18px!important}
+  .journal-card,.journal-card:nth-child(2),.journal-card:nth-child(3){flex:0 0 78vw!important;width:78vw!important;padding-top:0!important}
+  .journal-img,.journal-card:nth-child(2) .journal-img,.journal-card:nth-child(3) .journal-img{height:58vh!important;min-height:390px!important}
+}
+
+@media(max-width:620px){
+  .journal-drag-head{margin-top:40px}
+  .journal-card,.journal-card:nth-child(2),.journal-card:nth-child(3){flex-basis:86vw!important;width:86vw!important}
+  .scene-line{left:22px;right:22px}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .scene-mask:before{display:none}
+  .scene-line:before,.journal-drag-head .drag-status i:after{animation:none!important}
+  [data-depth]{transform:none!important}
+}
